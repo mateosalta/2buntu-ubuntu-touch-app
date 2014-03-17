@@ -8,6 +8,7 @@
             "desktop": "twobuntu-app.desktop"
         }
     },
+    "icon": "img/twobuntu-app.png",
     "maintainer": "Nathan Osman <admin@quickmediasolutions.com>",
     "name": "com.ubuntu.developer.nathanosman.twobuntu-app",
     "title": "2buntu",
