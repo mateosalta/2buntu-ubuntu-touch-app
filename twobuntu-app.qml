@@ -7,43 +7,11 @@ MainView {
     width: units.gu(40)
     height: units.gu(75)
 
+    backgroundColor: "#a55263"
+
+    /* Contains the articles to be displayed */
     ListModel {
         id: articles
-
-        ListElement {
-            title: "Gnome 4 Is Here"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
-
-        ListElement {
-            title: "Hands-on with Ubuntu Touch Emulator"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
-
-        ListElement {
-            title: "Office 2014 for Linux?"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
-
-        ListElement {
-            title: "Unity 9 Seen in the Wild"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
-
-        ListElement {
-            title: "User @iospwn Runs iOS on Nexus 5"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
-
-        ListElement {
-            title: "Nvidia to Support Mir"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
-
-        ListElement {
-            title: "What's New in OpenGL 5"
-            body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ullamcorper ante non tincidunt volutpat. Fusce nulla risus, mollis non eros id, condimentum scelerisque dolor. Nullam vehicula gravida risus vel commodo. Aliquam at felis at lacus varius feugiat. Curabitur laoreet metus quam. Donec eu suscipit sem. Vivamus at lectus tristique, adipiscing purus eu, luctus risus. Donec varius, neque in malesuada pulvinar, neque metus bibendum sem, in mattis sem lorem tempus quam."
-        }
     }
 
     /* Controls the display of articles in the list */
@@ -60,6 +28,7 @@ MainView {
 
                 Text {
                     width: parent.width
+                    color: "white"
                     font.pixelSize: FontUtils.sizeToPixels("large")
                     elide: Text.ElideRight
                     text: title
@@ -67,20 +36,21 @@ MainView {
 
                 Text {
                     width: parent.width
+                    color: "white"
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignJustify
                     maximumLineCount: 3
                     wrapMode: Text.WordWrap
-                    text: body
+                    text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
                 }
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    articleViewPage.title = title
-                    articleBody.text = body
-                    pageStack.push(articleViewPage)
+                    articleViewPage.title = title;
+                    articleBody.text = body;
+                    pageStack.push(articleViewPage);
                 }
             }
         }
@@ -89,7 +59,10 @@ MainView {
     /* Contains the pages displayed in the app */
     PageStack {
         id: pageStack
-        Component.onCompleted: push(articleListPage)
+        Component.onCompleted: {
+            push(articleListPage);
+            refreshArticles();
+        }
 
         /* Initial page displayed at startup */
         Page {
@@ -102,7 +75,7 @@ MainView {
                 anchors.margins: units.gu(2)
                 model: articles
                 delegate: articleDelegate
-                spacing: units.gu(2)
+                spacing: units.gu(3)
             }
         }
 
@@ -111,17 +84,34 @@ MainView {
             id: articleViewPage
             visible: false
 
-            Column {
+            Flickable {
                 anchors.fill: parent
                 anchors.margins: units.gu(2)
+                contentHeight: childrenRect.height
 
                 Text {
                     id: articleBody
                     width: parent.width
+                    color: "white"
                     horizontalAlignment: Text.AlignJustify
                     wrapMode: Text.WordWrap
                 }
             }
         }
+    }
+
+    /* Refreshes the list of articles */
+    function refreshArticles() {
+        var req = new XMLHttpRequest();
+        req.open('GET', 'http://2buntu.com/api/1.1/articles/published/');
+        req.onreadystatechange = function() {
+            if(req.readyState === XMLHttpRequest.DONE) {
+                articles.clear();
+                var new_articles = JSON.parse(req.responseText);
+                for(var i=0; i<new_articles.length; ++i)
+                    articles.append(new_articles[i]);
+            }
+        };
+        req.send();
     }
 }
