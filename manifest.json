@@ -1,0 +1,15 @@
+{
+    "architecture": "all",
+    "description": "Displays articles from 2buntu.com",
+    "framework": "ubuntu-sdk-13.10",
+    "hooks": {
+        "twobuntu-app": {
+            "apparmor": "twobuntu-app.json",
+            "desktop": "twobuntu-app.desktop"
+        }
+    },
+    "maintainer": "Nathan Osman <admin@quickmediasolutions.com>",
+    "name": "com.ubuntu.developer.nathanosman.twobuntu-app",
+    "title": "2buntu",
+    "version": "0.1"
+}
