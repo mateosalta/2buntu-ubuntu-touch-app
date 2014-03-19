@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=2buntu
-Version=0.1
+Version=1.0
 Exec=qmlscene /usr/share/twobuntu-app/twobuntu-app.qml
-Icon=/usr/share/twobuntu-app/icons/twobuntu-app.png
+Icon=img/twobuntu-app.png
 Terminal=false
 Type=Application
 X-Ubuntu-Touch=true
