@@ -52,6 +52,7 @@ MainView {
                                          '<style>html { color: white; font-family: Ubuntu; margin: ' + units.gu(1) +
                                          '; text-align: justify} img { max-width: 100% }</style>' + body,
                                          'http://2buntu.com/');
+                    articleView.contentY = 0;
                     pageStack.push(articleViewPage);
                 }
             }
@@ -86,10 +87,14 @@ MainView {
             id: articleViewPage
             visible: false
 
-            UbuntuWebView {
-                id: articleView
+            Column {
                 anchors.fill: parent
-                experimental.transparentBackground: true
+
+                UbuntuWebView {
+                    id: articleView
+                    anchors.fill: parent
+                    experimental.transparentBackground: true
+                }
             }
         }
     }
