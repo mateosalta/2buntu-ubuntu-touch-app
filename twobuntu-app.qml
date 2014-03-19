@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.Extras.Browser 0.1
 
 MainView {
     objectName: "mainView"
@@ -10,13 +11,11 @@ MainView {
     backgroundColor: "#a55263"
 
     /* Contains the articles to be displayed */
-    ListModel {
-        id: articles
-    }
+    ListModel { id: articleList }
 
     /* Controls the display of articles in the list */
     Component {
-        id: articleDelegate
+        id: articleListDelegate
 
         Item {
             width: parent.width
@@ -40,8 +39,8 @@ MainView {
                     elide: Text.ElideRight
                     horizontalAlignment: Text.AlignJustify
                     maximumLineCount: 3
-                    wrapMode: Text.WordWrap
                     text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
+                    wrapMode: Text.WordWrap
                 }
             }
 
@@ -49,7 +48,10 @@ MainView {
                 anchors.fill: parent
                 onClicked: {
                     articleViewPage.title = title;
-                    articleBody.text = body;
+                    articleView.loadHtml('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">' +
+                                         '<style>html { color: white; font-family: Ubuntu; margin: ' + units.gu(1) +
+                                         '; text-align: justify} img { max-width: 100% }</style>' + body,
+                                         'http://2buntu.com/');
                     pageStack.push(articleViewPage);
                 }
             }
@@ -73,8 +75,8 @@ MainView {
             ListView {
                 anchors.fill: parent
                 anchors.margins: units.gu(2)
-                model: articles
-                delegate: articleDelegate
+                model: articleList
+                delegate: articleListDelegate
                 spacing: units.gu(3)
             }
         }
@@ -84,18 +86,10 @@ MainView {
             id: articleViewPage
             visible: false
 
-            Flickable {
+            UbuntuWebView {
+                id: articleView
                 anchors.fill: parent
-                anchors.margins: units.gu(2)
-                contentHeight: childrenRect.height
-
-                Text {
-                    id: articleBody
-                    width: parent.width
-                    color: "white"
-                    horizontalAlignment: Text.AlignJustify
-                    wrapMode: Text.WordWrap
-                }
+                experimental.transparentBackground: true
             }
         }
     }
@@ -106,10 +100,10 @@ MainView {
         req.open('GET', 'http://2buntu.com/api/1.1/articles/published/');
         req.onreadystatechange = function() {
             if(req.readyState === XMLHttpRequest.DONE) {
-                articles.clear();
+                articleList.clear();
                 var new_articles = JSON.parse(req.responseText);
                 for(var i=0; i<new_articles.length; ++i)
-                    articles.append(new_articles[i]);
+                    articleList.append(new_articles[i]);
             }
         };
         req.send();
