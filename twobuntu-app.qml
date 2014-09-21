@@ -39,12 +39,14 @@ MainView {
 
             // When an article is selected, open the article view page
             onArticleSelected: {
-                console.log("An article was selected: " + index);
+                articleViewPage.articleIndex = index;
+                pageStack.push(articleViewPage);
             }
         }
 
         ArticleViewPage {
             id: articleViewPage
+            articleModel: articleList
         }
     }
 }

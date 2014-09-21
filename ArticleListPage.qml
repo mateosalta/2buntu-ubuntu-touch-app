@@ -5,7 +5,7 @@ Page {
     title: i18n.tr("2buntu Articles")
     visible: false
 
-    // This will need to be specified when the page is instantiated
+    // These will need to be specified when the page is instantiated
     property ListModel articleModel
     signal articleSelected(int index)
 
