@@ -1,116 +1,50 @@
-import QtQuick 2.0
-import Ubuntu.Components 0.1
-import Ubuntu.Components.Extras.Browser 0.1
+import QtQuick 2.1
+import Ubuntu.Components 1.1
+
+import "articledb.js" as ArticleDB
 
 MainView {
-    objectName: "mainView"
+    objectName: "twobuntu"
     applicationName: "com.ubuntu.developer.nathanosman.twobuntu-app"
-    width: units.gu(40)
+
+    width: units.gu(50)
     height: units.gu(75)
 
-    backgroundColor: "#a55263"
+    backgroundColor: "#f5f5f5"
 
-    /* Contains the articles to be displayed */
-    ListModel { id: articleList }
+    // Model used for accessing all of the recent articles
+    // that are retrieved when the application loads
+    ListModel {
+        id: articleList
+        property bool loaded: false
 
-    /* Controls the display of articles in the list */
-    Component {
-        id: articleListDelegate
-
-        Item {
-            width: parent.width
-            height: childrenRect.height
-
-            Column {
-                width: parent.width
-                spacing: units.gu(1)
-
-                Text {
-                    width: parent.width
-                    color: "white"
-                    font.pixelSize: FontUtils.sizeToPixels("large")
-                    elide: Text.ElideRight
-                    text: title
-                }
-
-                Text {
-                    width: parent.width
-                    color: "white"
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignJustify
-                    maximumLineCount: 3
-                    text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
-                    wrapMode: Text.WordWrap
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    articleViewPage.title = title;
-                    articleView.loadHtml('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">' +
-                                         '<style>html { color: white; font-family: Ubuntu; margin: ' + units.gu(1) +
-                                         '; text-align: justify} img { max-width: 100% }</style>' + body,
-                                         'http://2buntu.com/');
-                    articleView.contentY = 0;
-                    pageStack.push(articleViewPage);
-                }
-            }
+        // Load the articles and populate the model
+        Component.onCompleted: {
+            ArticleDB.fetchArticles(function(articles) {
+                for(var i=0; i<articles.length; ++i)
+                    append(articles[i]);
+                loaded = true;
+            });
         }
     }
 
-    /* Contains the pages displayed in the app */
+    // List of pages
     PageStack {
         id: pageStack
-        Component.onCompleted: {
-            push(articleListPage);
-            refreshArticles();
-        }
+        Component.onCompleted: push(articleListPage)
 
-        /* Initial page displayed at startup */
-        Page {
+        ArticleListPage {
             id: articleListPage
-            title: i18n.tr("2buntu")
-            visible: false
+            articleModel: articleList
 
-            ListView {
-                anchors.fill: parent
-                anchors.margins: units.gu(2)
-                model: articleList
-                delegate: articleListDelegate
-                spacing: units.gu(3)
+            // When an article is selected, open the article view page
+            onArticleSelected: {
+                console.log("An article was selected: " + index);
             }
         }
 
-        /* Article detail page */
-        Page {
+        ArticleViewPage {
             id: articleViewPage
-            visible: false
-
-            Column {
-                anchors.fill: parent
-
-                UbuntuWebView {
-                    id: articleView
-                    anchors.fill: parent
-                    experimental.transparentBackground: true
-                }
-            }
         }
-    }
-
-    /* Refreshes the list of articles */
-    function refreshArticles() {
-        var req = new XMLHttpRequest();
-        req.open('GET', 'http://2buntu.com/api/1.1/articles/published/');
-        req.onreadystatechange = function() {
-            if(req.readyState === XMLHttpRequest.DONE) {
-                articleList.clear();
-                var new_articles = JSON.parse(req.responseText);
-                for(var i=0; i<new_articles.length; ++i)
-                    articleList.append(new_articles[i]);
-            }
-        };
-        req.send();
     }
 }

@@ -1,7 +1,7 @@
 {
     "architecture": "all",
     "description": "Displays articles from 2buntu.com",
-    "framework": "ubuntu-sdk-13.10",
+    "framework": "ubuntu-sdk-14.10-qml",
     "hooks": {
         "twobuntu-app": {
             "apparmor": "twobuntu-app.json",
@@ -12,5 +12,5 @@
     "maintainer": "Nathan Osman <admin@quickmediasolutions.com>",
     "name": "com.ubuntu.developer.nathanosman.twobuntu-app",
     "title": "2buntu",
-    "version": "0.1.1"
+    "version": "0.2.0"
 }
