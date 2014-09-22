@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=2buntu
 Version=1.0
-Exec=qmlscene /usr/share/twobuntu-app/twobuntu-app.qml
+Exec=qmlscene $@ twobuntu-app.qml
 Icon=img/twobuntu-app.png
 Terminal=false
 Type=Application
