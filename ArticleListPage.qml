@@ -36,7 +36,7 @@ Page {
                     radius: 'medium'
 
                     image: Image {
-                        source: 'http://gravatar.com/avatar/' + author.email_hash + '?s=128'
+                        source: 'http://gravatar.com/avatar/' + author.email_hash + '?s=128&d=identicon'
                     }
                 }
                 
@@ -84,5 +84,11 @@ Page {
         model: articleModel
         delegate: articleListDelegate
         spacing: units.gu(3)
+
+        // Allow pull-to-refresh
+        PullToRefresh {
+            refreshing: articleModel.refreshing
+            onRefresh: articleModel.refresh()
+        }
     }
 }

@@ -17,14 +17,24 @@ MainView {
     ListModel {
         id: articleList
         property bool loaded: false
+        property bool refreshing: false
 
         // Load the articles and populate the model
-        Component.onCompleted: {
+        function refresh() {
+            if(loaded)
+                refreshing = true;
             ArticleDB.fetchArticles(function(articles) {
+                clear();
                 for(var i=0; i<articles.length; ++i)
                     append(articles[i]);
                 loaded = true;
+                refreshing = false;
             });
+        }
+
+        // Refresh at startup
+        Component.onCompleted: {
+            refresh();
         }
     }
 
