@@ -24,31 +24,48 @@ Page {
         Item {
             width: parent.width
             height: childrenRect.height
-
-            // Display the title and content stacked vertically
-            Column {
+            
+            // Display the image to the left of the title and content
+            Row {
                 width: parent.width
                 spacing: units.gu(1)
 
-                Text {
-                    width: parent.width
-                    color: "#555555"
-                    font.pixelSize: FontUtils.sizeToPixels("large")
-                    elide: Text.ElideRight
-                    text: title
-                }
+                // Display the author's Gravatar
+                UbuntuShape {
+                    id: authorGravatar
+                    radius: 'medium'
 
-                // Attempt to strip out anything looking like an HTML tag from the body...
-                // It would sure be nice to have a striphtml() method
-                Text {
-                    width: parent.width
-                    color: "#555555"
-                    elide: Text.ElideRight
-                    horizontalAlignment: Text.AlignJustify
-                    maximumLineCount: 3
-                    text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
-                    textFormat: Text.PlainText
-                    wrapMode: Text.WordWrap
+                    image: Image {
+                        source: 'http://gravatar.com/avatar/' + author.email_hash + '?s=128'
+                    }
+                }
+                
+                // Display the title and content stacked vertically
+                Column {
+                    width: parent.width - units.gu(1) - authorGravatar.width
+                    spacing: units.gu(1)
+
+                    Text {
+                        width: parent.width
+                        color: "#555555"
+                        font.pixelSize: FontUtils.sizeToPixels("large")
+                        elide: Text.ElideRight
+                        text: title
+                    }
+
+                    // Attempt to strip out anything looking like an HTML tag from the body...
+                    // It would sure be nice to have a striphtml() method
+                    Text {
+                        width: parent.width
+                        color: "#555555"
+                        font.pixelSize: FontUtils.sizeToPixels("small")
+                        elide: Text.ElideRight
+                        horizontalAlignment: Text.AlignJustify
+                        maximumLineCount: 2
+                        text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
+                        textFormat: Text.PlainText
+                        wrapMode: Text.WordWrap
+                    }
                 }
             }
 
