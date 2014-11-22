@@ -13,15 +13,6 @@ Page {
     // when this property's value is changed
     property int articleIndex: -1
 
-    // And now for a masterful hack - we need the text colors, sizes,
-    // font family, etc. for the WebView but Ubuntu.Components.Themes
-    // doesn't provide all of them - so we create an invisible Label
-    // and extract all of the values from it ourselves - clever!
-    Label {
-        id: testLabel
-        visible: false;
-    }
-
     onArticleIndexChanged: {
 
         // Obtain the article from the model
@@ -36,12 +27,14 @@ Page {
             '<html>' +
               '<head>' +
                 '<meta charset="utf-8">' +
+                '<meta name="viewport" content="width=' + articleBody.width + '">' +
                 '<style>' +
                   'body {' +
                     'background-color: ' + Theme.palette.normal.background + ';' +
-                    'color: ' + testLabel.color + ';' +
-                    'font-family: "' + testLabel.font.family + '";' +
-                    'font-size: ' + testLabel.font.pointSize + 'pt;' +
+                    'color: ' + Theme.palette.selected.backgroundText + ';' +
+                    'font-family: "Ubuntu Light";' +
+                    'font-size: ' + FontUtils.sizeToPixels('medium') + 'px;' +
+                    'font-weight: 100;' +
                   '}' +
                   'code, pre { white-space: pre-wrap; word-wrap: break-word; }' +
                   'img { display: block; margin: auto; max-width: 100%; }' +
