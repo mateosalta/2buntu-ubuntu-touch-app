@@ -1,7 +1,7 @@
 import QtQuick 2.2
+import com.canonical.Oxide 1.0 as Oxide
 import Ubuntu.Components 1.1
 import Ubuntu.Components.Themes 0.1
-import Ubuntu.Web 0.2
 
 Page {
     visible: false
@@ -12,7 +12,6 @@ Page {
     // The specified index is retrieved from the model and displayed
     // when this property's value is changed
     property int articleIndex: -1
-
     onArticleIndexChanged: {
 
         // Obtain the article from the model
@@ -20,6 +19,9 @@ Page {
 
         // Set the title to that of the article
         title = article.title;
+
+        // TODO: Oxide exposes a lot of this stuff, so we may not
+        // need all of the CSS injection.
 
         // Build the long string of HTML (eek!) and insert it into the WebView
         articleBody.loadHtml(
@@ -48,8 +50,14 @@ Page {
         );
     }
 
-    WebView {
+    Oxide.WebView {
         id: articleBody
         anchors.fill: parent
+
+        // Ignore any navigation and instead open the browser
+        onNavigationRequested: {
+            request.action = Oxide.NavigationRequest.ActionReject;
+            Qt.openUrlExternally(request.url);
+        }
     }
 }

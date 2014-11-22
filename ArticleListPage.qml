@@ -46,9 +46,10 @@ Page {
                 id: articleTitle
                 anchors {
                     left: authorGravatar.right
-                    leftMargin: units.gu(1)
+                    leftMargin: units.gu(2)
                     right: parent.right
                     top: parent.top
+                    topMargin: units.gu(0.5)
                 }
 
                 color: "#555555"
@@ -60,11 +61,10 @@ Page {
             // Display the article body at the bottom
             Text {
                 anchors {
-                    top: articleTitle.bottom
                     left: authorGravatar.right
+                    leftMargin: units.gu(2)
                     right: parent.right
-                    leftMargin: units.gu(1)
-                    topMargin: units.gu(1)
+                    top: articleTitle.bottom
                 }
 
                 color: "#555555"
@@ -122,6 +122,7 @@ Page {
                 onClicked: articleModel.loadMore()
             }
 
+            // Indicator shown when more items are loading
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: units.gu(2)
