@@ -17,55 +17,67 @@ Page {
         visible: running
     }
 
+    // Each list item will be instantiated from this component
     Component {
         id: articleListDelegate
 
         Item {
             width: parent.width
             height: childrenRect.height
-            
-            // Display the image to the left of the title and content
-            Row {
-                width: parent.width
-                spacing: units.gu(1)
 
-                // Display the author's Gravatar
-                UbuntuShape {
-                    id: authorGravatar
-                    radius: 'medium'
-
-                    image: Image {
-                        source: 'http://gravatar.com/avatar/' + author.email_hash + '?s=128&d=identicon'
-                    }
+            // Display the author's Gravatar on the left side
+            UbuntuShape {
+                id: authorGravatar
+                anchors {
+                    left: parent.left
+                    top: parent.top
                 }
-                
-                // Display the title and content stacked vertically
-                Column {
-                    width: parent.width - units.gu(1) - authorGravatar.width
-                    spacing: units.gu(1)
 
-                    Text {
-                        width: parent.width
-                        color: "#555555"
-                        font.pixelSize: FontUtils.sizeToPixels("large")
-                        elide: Text.ElideRight
-                        text: title
-                    }
+                radius: 'medium'
 
-                    // Attempt to strip out anything looking like an HTML tag from the body...
-                    // It would sure be nice to have a striphtml() method
-                    Text {
-                        width: parent.width
-                        color: "#555555"
-                        font.pixelSize: FontUtils.sizeToPixels("small")
-                        elide: Text.ElideRight
-                        horizontalAlignment: Text.AlignJustify
-                        maximumLineCount: 2
-                        text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
-                        textFormat: Text.PlainText
-                        wrapMode: Text.WordWrap
-                    }
+                // TODO: figure out the optimal size to display
+                image: Image {
+                    source: 'http://gravatar.com/avatar/' + author.email_hash + '?s=128&d=identicon'
                 }
+            }
+
+            // Display the title of the article at the top
+            Text {
+                id: articleTitle
+                anchors {
+                    left: authorGravatar.right
+                    leftMargin: units.gu(1)
+                    right: parent.right
+                    top: parent.top
+                }
+
+                color: "#555555"
+                font.pixelSize: FontUtils.sizeToPixels("large")
+                elide: Text.ElideRight
+                text: title
+            }
+
+            // Display the article body at the bottom
+            Text {
+                anchors {
+                    top: articleTitle.bottom
+                    left: authorGravatar.right
+                    right: parent.right
+                    leftMargin: units.gu(1)
+                    topMargin: units.gu(1)
+                }
+
+                color: "#555555"
+                font.pixelSize: FontUtils.sizeToPixels("small")
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignJustify
+                maximumLineCount: 2
+                wrapMode: Text.WordWrap
+
+                // Attempt to strip out anything looking like an HTML tag from the body...
+                // It would sure be nice to have a striphtml() method
+                text: body.replace(/<(?:.|\n)*?>/g, '').replace(/\n+/g, ' ')
+                textFormat: Text.PlainText
             }
 
             // Mouse area to register clicks on articles
@@ -90,7 +102,7 @@ Page {
             onRefresh: articleModel.refresh()
         }
 
-        // Display an indicator at the bottom that more articles are loading
+        // Display a button allowing more articles to be loaded
         footer: Column {
             width: parent.width
             visible: articleModel.count
