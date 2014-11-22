@@ -9,12 +9,11 @@ Page {
     property ListModel articleModel
     signal articleSelected(int index)
 
-    // Progress indicator displayed while articles load
+    // Progress indicator displayed while articles load for the first time
     ActivityIndicator {
-        id: loadingIndicator
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        running: !articleModel.loaded
+        running: !articleModel.count && articleModel.loading
         visible: running
     }
 
@@ -87,8 +86,43 @@ Page {
 
         // Allow pull-to-refresh
         PullToRefresh {
-            refreshing: articleModel.refreshing
+            refreshing: articleModel.loading
             onRefresh: articleModel.refresh()
+        }
+
+        // Display an indicator at the bottom that more articles are loading
+        footer: Column {
+            width: parent.width
+            visible: articleModel.count
+
+            // A nasty hack to work around margin issues with footers
+            Rectangle {
+                color: "transparent"
+                width: parent.width
+                height: units.gu(3)
+            }
+
+            // Button that is pressed to load more items
+            Button {
+                width: parent.width
+                text: "Load More"
+                visible: !articleModel.loading
+                onClicked: articleModel.loadMore()
+            }
+
+            Row {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: units.gu(2)
+                visible: articleModel.loading
+
+                ActivityIndicator {
+                    running: true
+                }
+
+                Label {
+                    text: "Loading more articles..."
+                }
+            }
         }
     }
 }

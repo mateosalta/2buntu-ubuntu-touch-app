@@ -16,26 +16,23 @@ MainView {
     // that are retrieved when the application loads
     ListModel {
         id: articleList
-        property bool loaded: false
-        property bool refreshing: false
 
-        // Load the articles and populate the model
+        // True if data has been loaded into the list for the first time
+        property bool loading: true
+
+        // Refresh the articles in the list
         function refresh() {
-            if(loaded)
-                refreshing = true;
-            ArticleDB.fetchArticles(function(articles) {
-                clear();
-                for(var i=0; i<articles.length; ++i)
-                    append(articles[i]);
-                loaded = true;
-                refreshing = false;
-            });
+            ArticleDB.loadArticles(articleList);
+        }
+
+        // Load more articles
+        function loadMore() {
+            var lastTimestamp = articleList.get(articleList.count - 1).date;
+            ArticleDB.loadArticles(articleList, lastTimestamp - 1);
         }
 
         // Refresh at startup
-        Component.onCompleted: {
-            refresh();
-        }
+        Component.onCompleted: refresh()
     }
 
     // List of pages
