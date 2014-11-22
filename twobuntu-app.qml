@@ -6,6 +6,7 @@ import "articledb.js" as ArticleDB
 MainView {
     objectName: "twobuntu"
     applicationName: "com.ubuntu.developer.nathanosman.twobuntu-app"
+    useDeprecatedToolbar: false
 
     width: units.gu(50)
     height: units.gu(75)
