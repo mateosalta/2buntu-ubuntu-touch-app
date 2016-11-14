@@ -16,7 +16,7 @@ function loadArticles(articleList, before) {
 
     // Build the URL and open the request
     var max = before || parseInt(Date.now() / 1000),
-        url = 'http://2buntu.com/api/1.2/articles?max=' + max,
+        url = 'https://2buntu.com/api/1.2/articles?max=' + max,
         req = new XMLHttpRequest();
     req.open('GET', url);
     req.setRequestHeader('X-Application-Version', '0.2.4');
