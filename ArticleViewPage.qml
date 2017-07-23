@@ -1,7 +1,7 @@
-import QtQuick 2.2
-import com.canonical.Oxide 1.0 as Oxide
-import Ubuntu.Components 1.1
-import Ubuntu.Components.Themes 0.1
+import QtQuick 2.4
+import com.canonical.Oxide 1.19 as Oxide
+import Ubuntu.Components 1.3
+import Ubuntu.Components.Themes 1.3
 
 Page {
     visible: false
@@ -35,6 +35,7 @@ Page {
                     'background-color: ' + Theme.palette.normal.background + ';' +
                     'color: ' + Theme.palette.selected.backgroundText + ';' +
                     'font-family: "Ubuntu Light";' +
+                    'margin: 25px;'  +
                     'font-size: ' + FontUtils.sizeToPixels('medium') + 'px;' +
                     'font-weight: 100;' +
                   '}' +

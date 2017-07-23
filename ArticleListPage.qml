@@ -1,15 +1,17 @@
-import QtQuick 2.2
-import Ubuntu.Components 1.1
+import QtQuick 2.4
+import Ubuntu.Components 1.3
 
 Page {
+
+    //todo: ttitle bar does not hide reload
     title: i18n.tr("2buntu Articles")
     visible: false
-
     // These will need to be specified when the page is instantiated
     property ListModel articleModel
     signal articleSelected(int index)
 
     // Progress indicator displayed while articles load for the first time
+    //todo: needs fixing
     ActivityIndicator {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -33,7 +35,7 @@ Page {
                     top: parent.top
                 }
 
-                radius: 'medium'
+                radius: 'small'
 
                 // TODO: figure out the optimal size to display
                 image: Image {
@@ -52,8 +54,8 @@ Page {
                     topMargin: units.gu(0.5)
                 }
 
-                color: "#555555"
-                font.pixelSize: FontUtils.sizeToPixels("large")
+                color: "#000000"
+                font.pixelSize: FontUtils.sizeToPixels("medium")
                 elide: Text.ElideRight
                 text: title
             }
@@ -71,7 +73,7 @@ Page {
                 font.pixelSize: FontUtils.sizeToPixels("small")
                 elide: Text.ElideRight
                 horizontalAlignment: Text.AlignJustify
-                maximumLineCount: 2
+                maximumLineCount: 3
                 wrapMode: Text.WordWrap
 
                 // Attempt to strip out anything looking like an HTML tag from the body...
@@ -97,10 +99,11 @@ Page {
         spacing: units.gu(3)
 
         // Allow pull-to-refresh
-        PullToRefresh {
+        // pull refresh text broke
+       /* PullToRefresh {
             refreshing: articleModel.loading
             onRefresh: articleModel.refresh()
-        }
+        } */
 
         // Display a button allowing more articles to be loaded
         footer: Column {

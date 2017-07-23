@@ -1,17 +1,18 @@
-import QtQuick 2.2
-import Ubuntu.Components 1.1
+import QtQuick 2.4
+import Ubuntu.Components 1.3
 
 import "articledb.js" as ArticleDB
 
 MainView {
     objectName: "twobuntu"
     applicationName: "com.ubuntu.developer.nathanosman.twobuntu-app"
-    useDeprecatedToolbar: false
 
     width: units.gu(50)
     height: units.gu(75)
 
-    backgroundColor: "#f5f5f5"
+    backgroundColor: "#FFFFFF"
+
+
 
     // Model used for accessing all of the recent articles
     // that are retrieved when the application loads
